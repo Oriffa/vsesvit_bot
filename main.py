@@ -5,15 +5,14 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 from flask import Flask
 import threading
 
-# 1. ВСТАВ СВОЇ КЛЮЧІ МІЖ ЛАПКАМИ ""
+# --- КОНФІГУРАЦІЯ (ВСТАВЛЯЙ ТУТ) ---
 TELEGRAM_TOKEN = "8463164329:AAGPNll44K_NAVMPm7EHFqFT7zxs6MfGPiM"
 GEMINI_API_KEY = "AIzaSyAihaTmWx_GMAtiR0suXMbbZUmqMFw_aOI"
+# ----------------------------------
 
-# Налаштування Gemini
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# Веб-сервер для Koyeb
 app = Flask(name)
 @app.route('/')
 def home(): return "OK", 200
@@ -21,7 +20,6 @@ def home(): return "OK", 200
 def run_flask():
     app.run(host='0.0.0.0', port=8080)
 
-# Логіка бота
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("✨ Вітаю у Всесвіті! Надішліть фото долоні.")
 
