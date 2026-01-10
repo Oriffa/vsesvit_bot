@@ -5,20 +5,16 @@ from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, fil
 from flask import Flask
 import threading
 
-# --- КОНФІГУРАЦІЯ (ВСТАВЛЯЙ ТУТ) ---
-TELEGRAM_TOKEN = "8463164329:AAGPNll44K_NAVMPm7EHFqFT7zxs6MfGPiM"
-GEMINI_API_KEY = "AIzaSyAihaTmWx_GMAtiR0suXMbbZUmqMFw_aOI"
-# ----------------------------------
+# Тепер беремо ключі з налаштувань системи
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 genai.configure(api_key=GEMINI_API_KEY)
 model = genai.GenerativeModel('gemini-1.5-flash')
-
-app = Flask(name)
+app = Flask(__name__)
 @app.route('/')
 def home(): return "OK", 200
-
-def run_flask():
-    app.run(host='0.0.0.0', port=8080)
+def run_flask(): app.run(host='0.0.0.0', port=8080)
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("✨ Вітаю у Всесвіті! Надішліть фото долоні.")
@@ -36,7 +32,7 @@ async def handle_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await update.message.reply_text(f"Помилка: {e}")
 
-if name == 'main':
+if __name__ == '__main__':
     threading.Thread(target=run_flask).start()
     application = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     application.add_handler(CommandHandler("start", start))
